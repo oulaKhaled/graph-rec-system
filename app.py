@@ -2,11 +2,18 @@ import torch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from src.model import load_model, get_recommendations
-
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # --- FastAPI setup ---
 app = FastAPI(title="Graph Movie Recommender")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@app.get("/")
+def home():
+    return FileResponse("static/index.html")
+
 
 # app.add_middleware(
 #     CORSMiddleware,
@@ -55,12 +62,3 @@ app = FastAPI(title="Graph Movie Recommender")
 
 # # Mount Gradio inside FastAPI
 # app = gr.mount_gradio_app(app, demo, path="/ui")
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
-@app.get("/")
-def home():
-    return FileResponse("static/index.html")
