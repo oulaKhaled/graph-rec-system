@@ -2,7 +2,6 @@ import torch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import gradio as gr
 from src.model import load_model, get_recommendations
 
 
