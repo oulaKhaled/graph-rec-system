@@ -2,6 +2,7 @@
 model/*.pth
 model/SentenceTrans_model/
 model/review_model/
+data/*
 
 # python cache
 __pycache__/
