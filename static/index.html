@@ -35,8 +35,8 @@ header p { color: #888; font-size: 13px; }
 
 .series-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 2fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
   margin-bottom: 32px;
 }
 
@@ -251,7 +251,7 @@ header p { color: #888; font-size: 13px; }
 <body>
 
 <header>
-  <h1>Recommender System</h1>
+  <h1>Series Recommender</h1>
   <p id="rated-count">0 series rated</p>
 </header>
 
@@ -260,8 +260,6 @@ header p { color: #888; font-size: 13px; }
   <div id="browse-section">
     <div class="info-bar">Click a series to rate it, then hit Recommend.</div>
     <div class="series-grid" id="series-grid">
-    
-      <div class="skeleton"></div><div class="skeleton"></div>
       <div class="skeleton"></div><div class="skeleton"></div>
       <div class="skeleton"></div><div class="skeleton"></div>
       <div class="skeleton"></div><div class="skeleton"></div>
@@ -325,7 +323,7 @@ header p { color: #888; font-size: 13px; }
 <div class="toast" id="toast"></div>
 
 <script>
-const TMDB_API_KEY = "f9c822e5b42a80dd2f12f5df9589fbe9";
+const TMDB_API_KEY = "YOUR_TMDB_API_KEY";
 const API_BASE = "";
 const CSV_PATH = "/static/series.csv";
 
@@ -414,23 +412,15 @@ function updateStars(val) {
 
 function confirmRating() {
   if (!currentSeries || !currentRating) return;
-  
   const title = currentSeries.title;
   const tmdbId = currentSeries.tmdb_id;
-
   ratings[tmdbId] = currentRating;
-  
   const card = document.querySelector(`[data-id="${tmdbId}"]`);
   if (card) {
     let badge = card.querySelector(".rated-badge");
-    if (!badge) { 
-      badge = document.createElement("div"); 
-      badge.className = "rated-badge"; 
-      card.appendChild(badge); 
-    }
+    if (!badge) { badge = document.createElement("div"); badge.className = "rated-badge"; card.appendChild(badge); }
     badge.textContent = `★ ${currentRating}`;
   }
-
   document.getElementById("rated-count").textContent = `${Object.keys(ratings).length} series rated`;
   closeModal();
   showToast(`Rated: ${title}`);
