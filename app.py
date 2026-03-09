@@ -21,12 +21,8 @@ def home():
 
 
 class RecommendRequest(BaseModel):
-    user_index: int
-    x_dict: Tensor
-    data: HeteroData
     username: str
     ratings: Dict[str, int]
-    k = 5
 
 
 @app.post("/recommend")

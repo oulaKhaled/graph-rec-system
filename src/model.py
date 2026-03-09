@@ -12,14 +12,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 gnn_model, encode_model = load_models()
-data = load_data()
 
 
-def get_recommendation(
-    user_index: int, x_dict, data: HeteroData, username, ratings: Dict[str, int], k=5
-):
+def get_recommendation(username: str, ratings: Dict[str, int]):
     data, user_index = get_or_create_user(
-        username, list(ratings.keys()), list(ratings.values()), data, encode_model
+        username, list(ratings.keys()), list(ratings.values())
     )
     ## save new HeteroGraph
     gnn_model.eval()
