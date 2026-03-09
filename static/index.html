@@ -423,10 +423,17 @@ function confirmRating() {
   }
   document.getElementById("rated-count").textContent = `${Object.keys(ratings).length} series rated`;
   closeModal();
+  console.log("title : ",title)
+  console.log("tmdbId : ",tmdbId);
+
+  console.log("ratings : ",ratings);
+  
   showToast(`Rated: ${title}`);
 }
 
 async function getRecommendations() {
+  console.log("getRecommendations func is calling");
+  
   if (!Object.keys(ratings).length) { showToast("Rate at least one series first"); return; }
   showLoading();
   try {
@@ -445,6 +452,8 @@ async function getRecommendations() {
 }
 
 async function showResults(ids) {
+  console.log("showResults fun is calling");
+  
   document.getElementById("browse-section").classList.add("hidden");
   const recommended = ids.map(id => allSeries.find(s => String(s.tmdb_id) === String(id))).filter(Boolean);
   document.getElementById("results-sub").textContent =
