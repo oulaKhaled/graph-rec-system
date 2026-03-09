@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import pandas as pd
 import json
-from sentence_transformers import SentenceTransforme
+from sentence_transformers import SentenceTransformer
 
 path = ""
 
@@ -19,7 +19,7 @@ df_reviews_rate_exist = pd.read_csv(f"data\df_reviews_rate_exist11.csv")
 
 def load_models():
     gnn_model = torch.load("model/gnn_model112.pth", map_location="cpu")
-    enocode_model = SentenceTransforme(f"model\SentenceTrans_model")
+    enocode_model = SentenceTransformer(f"model\SentenceTrans_model")
     return gnn_model, enocode_model
 
 

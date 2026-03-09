@@ -5,7 +5,6 @@ from torch_geometric.data import HeteroData
 
 from src.preprocess import get_or_create_user, load_data, load_models
 import numpy
-from sentence_transformers import SentenceTransforme
 from typing import Dict
 
 # MODEL_PATH = Path("model\gnn_model112.pth")
