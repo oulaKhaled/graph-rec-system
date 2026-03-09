@@ -1,6 +1,7 @@
 import torch
 import numpy as np
-from src.model import load_models, load_data
+from ..model import load_models, load_data
+
 import pandas as pd
 import json
 from sentence_transformers import SentenceTransforme

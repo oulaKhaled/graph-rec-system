@@ -2,7 +2,8 @@ import pickle
 import torch
 from pathlib import Path
 from torch_geometric.data import HeteroData
-from src.preprocess import get_or_create_user
+
+from .preprocess import get_or_create_user
 import numpy
 from sentence_transformers import SentenceTransforme
 from typing import Dict
