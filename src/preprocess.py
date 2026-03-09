@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from src.model import load_model,load_data()
+from src.model import load_models, load_data
 import pandas as pd
 import json
 from sentence_transformers import SentenceTransforme
@@ -8,59 +8,57 @@ from sentence_transformers import SentenceTransforme
 path = ""
 
 
-#encode_mode = SentenceTransformer(f"model\SentenceTrans_model")
+# encode_mode = SentenceTransformer(f"model\SentenceTrans_model")
 series_details_df = pd.read_csv(f"data\series_details_df1.csv")
 df_reviews_rate_exist = pd.read_csv(f"data\df_reviews_rate_exist11.csv")
-
-
 
 
 ## create a function that will retrun nodes count to observe how many new users comes in
 
 # {"ratings": {"1396": 8, "66732": 9, "1399": 7}}
 
+
 def get_or_create_user(username, rated_series_id, rating, data, encode_mode):
 
     with open("data/user_registry.json", "r") as f:
         user_registry = json.load(f)
-    
+
     if username in user_registry:
         # returning user
         user_index = user_registry[username]
         data = add_new_interaction(user_index, rated_series_id, rating, data)
-    
+
     else:
         # new user
-        data, user_index = add_new_user(
-            rated_series_id, data, rating, encode_mode
-        )
-        
+        data, user_index = add_new_user(rated_series_id, data, rating, encode_mode)
+
         user_registry[username] = user_index
-        
+
         with open(f"{path}user_registry.json", "w") as f:
             json.dump(user_registry, f)
-        
+
         print(f"New user created! User index: {user_index}")
-    
+
     return data, user_index
+
 
 def add_new_interaction(user_index, ratings_dict, data):
     # ratings_dict = {"series_id": rating, ...}
     # convert string keys to int
     ratings_dict = {int(k): v for k, v in ratings_dict.items()}
     existing_edges = data["users", "rate", "series"].edge_index
-    
+
     for series_id, rating in ratings_dict.items():
-        
+
         # check if edge already exists
         mask = (existing_edges[0] == user_index) & (existing_edges[1] == series_id)
-        
+
         if mask.any():
             # Case 1 & 2 — update existing edge rating
             data["users", "rate", "series"].edge_attr[mask] = torch.tensor(
                 rating, dtype=torch.float
             )
-            
+
             # update reverse edge attr too
             rev_existing = data["series", "rev_rate", "users"].edge_index
             rev_mask = (rev_existing[0] == series_id) & (rev_existing[1] == user_index)
@@ -68,41 +66,44 @@ def add_new_interaction(user_index, ratings_dict, data):
                 data["series", "rev_rate", "users"].edge_attr[rev_mask] = torch.tensor(
                     rating, dtype=torch.float
                 )
-            
+
             print(f"Updated edge: user_{user_index} → series_{series_id} = {rating}")
 
         else:
             # Case 3 & 4 — create new edge
             new_edge = torch.tensor([[user_index], [series_id]], dtype=torch.long)
-            data["users", "rate", "series"].edge_index = torch.cat([
-                existing_edges,
-                new_edge
-            ], dim=1)
-            
-            data["users", "rate", "series"].edge_attr = torch.cat([
-                data["users", "rate", "series"].edge_attr,
-                torch.tensor([rating], dtype=torch.float)
-            ], dim=0)
-            
+            data["users", "rate", "series"].edge_index = torch.cat(
+                [existing_edges, new_edge], dim=1
+            )
+
+            data["users", "rate", "series"].edge_attr = torch.cat(
+                [
+                    data["users", "rate", "series"].edge_attr,
+                    torch.tensor([rating], dtype=torch.float),
+                ],
+                dim=0,
+            )
+
             # reverse edge
             new_rev_edge = torch.tensor([[series_id], [user_index]], dtype=torch.long)
-            data["series", "rev_rate", "users"].edge_index = torch.cat([
-                data["series", "rev_rate", "users"].edge_index,
-                new_rev_edge
-            ], dim=1)
-            
-            data["series", "rev_rate", "users"].edge_attr = torch.cat([
-                data["series", "rev_rate", "users"].edge_attr,
-                torch.tensor([rating], dtype=torch.float)
-            ], dim=0)
-            
+            data["series", "rev_rate", "users"].edge_index = torch.cat(
+                [data["series", "rev_rate", "users"].edge_index, new_rev_edge], dim=1
+            )
+
+            data["series", "rev_rate", "users"].edge_attr = torch.cat(
+                [
+                    data["series", "rev_rate", "users"].edge_attr,
+                    torch.tensor([rating], dtype=torch.float),
+                ],
+                dim=0,
+            )
+
             # update existing_edges reference for next iteration
             existing_edges = data["users", "rate", "series"].edge_index
-            
-            print(f"Created edge: user_{user_index} → series_{series_id} = {rating}")
-    
-    return data
 
+            print(f"Created edge: user_{user_index} → series_{series_id} = {rating}")
+
+    return data
 
 
 def add_new_user(
