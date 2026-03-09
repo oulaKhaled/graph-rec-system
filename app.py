@@ -28,7 +28,8 @@ class RecommendRequest(BaseModel):
 @app.post("/recommend")
 def recommend(req: RecommendRequest):
     print("Received ratings:", req.ratings)
-    top_k = get_recommendation(req)
+
+    top_k = get_recommendation(req.username, req.ratings)
 
     # dummy response for now — return some tmdb_ids from your dataset
     return {"recommendations": top_k}

@@ -254,7 +254,14 @@ header p { color: #888; font-size: 13px; }
   <h1>Series Recommender</h1>
   <p id="rated-count">0 series rated</p>
 </header>
-
+<div style="padding: 0 32px 16px; border-bottom: 1px solid #e5e5e5;">
+  <input 
+    id="username-input" 
+    type="text" 
+    placeholder="Enter your name to get recommendations"
+    style="padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 13px; width: 280px;"
+  />
+</div>
 <div class="container">
 
   <div id="browse-section">
@@ -430,25 +437,28 @@ function confirmRating() {
   
   showToast(`Rated: ${title}`);
 }
-
 async function getRecommendations() {
+  const username = document.getElementById("username-input").value.trim();
+  
+  if (!username) { showToast("Please enter your name first"); return; }
   if (!Object.keys(ratings).length) { showToast("Rate at least one series first"); return; }
+  
   showLoading();
   try {
     const res = await fetch(`${API_BASE}/recommend`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ratings })
+      body: JSON.stringify({ username, ratings })  // ← username added
     });
     const data = await res.json();
     hideLoading();
+    
+    console.log("API response:", data);  // ← fixed from print()
     
     if (!data.recommendations) {
       showToast("No recommendations returned");
       return;
     }
-    print(data)
-  
     showResults(data.recommendations);
   } catch (err) {
     hideLoading();
