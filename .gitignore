@@ -1,0 +1,9 @@
+# model files too large for GitHub
+model/*.pth
+model/SentenceTrans_model/
+model/review_model/
+
+# python cache
+__pycache__/
+*.pyc
+.env
