@@ -447,7 +447,8 @@ async function getRecommendations() {
       showToast("No recommendations returned");
       return;
     }
-    
+    print(data)
+  
     showResults(data.recommendations);
   } catch (err) {
     hideLoading();

@@ -5,7 +5,11 @@ from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from typing import Dict
-
+import pandas
+from src.model import get_recommendation
+from torch_geometric.data import HeteroData
+from torch import Tensor
+from 
 # --- FastAPI setup ---
 app = FastAPI(title="Graph Movie Recommender")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -17,15 +21,21 @@ def home():
 
 
 class RecommendRequest(BaseModel):
+    user_index: int
+    x_dict: Tensor 
+    data: HeteroData
+    username:str
     ratings: Dict[str, int]
+    k=5
 
 
 @app.post("/recommend")
 def recommend(req: RecommendRequest):
     print("Received ratings:", req.ratings)
+    top_k=get_recommendation(req)
 
     # dummy response for now — return some tmdb_ids from your dataset
-    return {"recommendations": [1396, 1399, 66732, 63174, 1408]}
+    return {"recommendations": top_k}
 
 
 # app.add_middleware(
