@@ -254,13 +254,25 @@ header p { color: #888; font-size: 13px; }
   <h1>Series Recommender</h1>
   <p id="rated-count">0 series rated</p>
 </header>
-<div style="padding: 0 32px 16px; border-bottom: 1px solid #e5e5e5;">
+<div style="padding: 16px 32px; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; gap: 12px;">
   <input 
     id="username-input" 
     type="text" 
-    placeholder="Enter your name to get recommendations"
-    style="padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 13px; width: 280px;"
+    placeholder="Your name"
+    style="
+      padding: 8px 12px; 
+      border: 1px solid #e5e5e5; 
+      border-radius: 4px; 
+      font-size: 13px; 
+      width: 200px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    "
+    onfocus="this.style.borderColor='#111'"
+    onblur="this.style.borderColor='#e5e5e5'"
   />
+  <span style="font-size: 12px; color: #888;">Enter your name before recommending</span>
 </div>
 <div class="container">
 
@@ -281,7 +293,7 @@ header p { color: #888; font-size: 13px; }
         <h2>Recommendations</h2>
         <p id="results-sub"></p>
       </div>
-      <button class="btn" onclick="resetAll()">← Back</button>
+      <button class="btn" onclick="resetAll()" style="flex: none; padding: 8px 16px;" >← Back</button>
     </div>
     <div class="series-grid" id="results-grid"></div>
   </div>
@@ -475,7 +487,7 @@ async function showResults(ids) {
   console.log("showResults fun is calling");
   
   document.getElementById("browse-section").classList.add("hidden");
-  const recommended = ids.map(id => allSeries.find(s => String(s.tmdb_id) === String(id))).filter(Boolean);
+  const recommended = ids.map(id => allSeries.find(s => String(s.index) === String(id))).filter(Boolean);
   document.getElementById("results-sub").textContent =
     `${recommended.length} picks based on your ${Object.keys(ratings).length} ratings`;
   await renderGrid(recommended, "results-grid");
