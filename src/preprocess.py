@@ -17,7 +17,7 @@ path = ""
 
 def load_models():
     gnn_model = torch.load("model/gnn_model112.pth", map_location="cpu")
-    enocode_model = SentenceTransformer(f"model\SentenceTrans_model")
+    enocode_model = SentenceTransformer(f"model/SentenceTrans_model")
 
     return gnn_model, enocode_model
 
