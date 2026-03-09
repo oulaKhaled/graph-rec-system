@@ -26,7 +26,7 @@ def get_recommendation(username: str, ratings_dict: Dict[str, int]):
 
         # exclude ALL rated series
         for sid in list(ratings_dict.keys()):
-            scores[sid] = -1
+            scores[int(sid)] = -1
         ## recommend it series indices
         top_k = scores.topk(5).indices.cpu().numpy()
     return top_k

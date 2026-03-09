@@ -421,8 +421,10 @@ function confirmRating() {
   if (!currentSeries || !currentRating) return;
   const title = currentSeries.title;
   const tmdbId = currentSeries.tmdb_id;
-  ratings[tmdbId] = currentRating;
-  const card = document.querySelector(`[data-id="${tmdbId}"]`);
+  const index = currentSeries.index;
+  
+  ratings[index] = currentRating;
+  const card = document.querySelector(`[data-id="${index}"]`);
   if (card) {
     let badge = card.querySelector(".rated-badge");
     if (!badge) { badge = document.createElement("div"); badge.className = "rated-badge"; card.appendChild(badge); }
@@ -432,6 +434,8 @@ function confirmRating() {
   closeModal();
   console.log("title : ",title)
   console.log("tmdbId : ",tmdbId);
+  console.log("index : ",index);
+  
 
   console.log("ratings : ",ratings);
   
