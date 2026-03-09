@@ -32,7 +32,7 @@ def recommend(req: RecommendRequest):
     top_k = get_recommendation(req.username, req.ratings)
 
     # dummy response for now — return some tmdb_ids from your dataset
-    return {"recommendations": top_k}
+    return {"recommendations": top_k.tolist()}  # ← convert numpy to list
 
 
 # app.add_middleware(
