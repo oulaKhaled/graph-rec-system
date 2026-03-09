@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from typing import Dict
 
 # --- FastAPI setup ---
 app = FastAPI(title="Graph Movie Recommender")
@@ -13,6 +14,18 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
 def home():
     return FileResponse("static/index.html")
+
+
+class RecommendRequest(BaseModel):
+    ratings: Dict[str, int]
+
+
+@app.post("/recommend")
+def recommend(req: RecommendRequest):
+    print("Received ratings:", req.ratings)
+
+    # dummy response for now — return some tmdb_ids from your dataset
+    return {"recommendations": [1396, 1399, 66732, 63174, 1408]}
 
 
 # app.add_middleware(

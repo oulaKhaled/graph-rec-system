@@ -432,8 +432,6 @@ function confirmRating() {
 }
 
 async function getRecommendations() {
-  console.log("getRecommendations func is calling");
-  
   if (!Object.keys(ratings).length) { showToast("Rate at least one series first"); return; }
   showLoading();
   try {
@@ -444,10 +442,17 @@ async function getRecommendations() {
     });
     const data = await res.json();
     hideLoading();
+    
+    if (!data.recommendations) {
+      showToast("No recommendations returned");
+      return;
+    }
+    
     showResults(data.recommendations);
   } catch (err) {
     hideLoading();
     showToast("Could not reach the model API");
+    console.error(err);
   }
 }
 
