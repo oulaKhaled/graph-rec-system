@@ -25,7 +25,7 @@ def load_models():
 def load_data():
     hetero_data = torch.load("data/hetero_graph3.pt")
     series_details_df = pd.read_csv("data/series_details_df1.csv")
-    df_reviews_rate_exist = pd.read_csv("data/df_reviews_rate_exist11.csv")
+    df_reviews_rate_exist = pd.read_csv("data/df_reviews_rate_exist12.csv")
 
     return hetero_data, series_details_df, df_reviews_rate_exist
 
