@@ -414,19 +414,26 @@ function updateStars(val) {
 
 function confirmRating() {
   if (!currentSeries || !currentRating) return;
-   const title = currentSeries.title;
-  ratings[currentSeries.tmdb_id] = currentRating;
-  const card = document.querySelector(`[data-id="${currentSeries.tmdb_id}"]`);
+  
+  const title = currentSeries.title;
+  const tmdbId = currentSeries.tmdb_id;
+
+  ratings[tmdbId] = currentRating;
+  
+  const card = document.querySelector(`[data-id="${tmdbId}"]`);
   if (card) {
     let badge = card.querySelector(".rated-badge");
-    if (!badge) { badge = document.createElement("div"); badge.className = "rated-badge"; card.appendChild(badge); }
+    if (!badge) { 
+      badge = document.createElement("div"); 
+      badge.className = "rated-badge"; 
+      card.appendChild(badge); 
+    }
     badge.textContent = `★ ${currentRating}`;
   }
+
   document.getElementById("rated-count").textContent = `${Object.keys(ratings).length} series rated`;
   closeModal();
-  showToast(`Rated: ${currentSeries.title}`);
-  console.log(currentSeries.title);
-  
+  showToast(`Rated: ${title}`);
 }
 
 async function getRecommendations() {
