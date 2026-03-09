@@ -14,10 +14,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 gnn_model, encode_model = load_models()
 
 
-def get_recommendation(username: str, ratings: Dict[str, int]):
-    data, user_index = get_or_create_user(
-        username, list(ratings.keys()), list(ratings.values())
-    )
+def get_recommendation(username: str, ratings_dict: Dict[str, int]):
+    data, user_index = get_or_create_user(username, ratings_dict)
     ## save new HeteroGraph
     gnn_model.eval()
     with torch.no_grad():
@@ -26,7 +24,7 @@ def get_recommendation(username: str, ratings: Dict[str, int]):
         scores = torch.sigmoid((user_emb * x_dict["series"]).sum(dim=-1))
 
         # exclude ALL rated series
-        for sid in list(ratings.keys()):
+        for sid in list(ratings_dict.keys()):
             scores[sid] = -1
         ## recommend it series indices
         top_k = scores.topk(5).indices.cpu().numpy()
