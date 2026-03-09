@@ -1,7 +1,5 @@
 import torch
 import numpy as np
-from ..model import load_models, load_data
-
 import pandas as pd
 import json
 from sentence_transformers import SentenceTransforme
@@ -17,6 +15,17 @@ df_reviews_rate_exist = pd.read_csv(f"data\df_reviews_rate_exist11.csv")
 ## create a function that will retrun nodes count to observe how many new users comes in
 
 # {"ratings": {"1396": 8, "66732": 9, "1399": 7}}
+
+
+def load_models():
+    gnn_model = torch.load("model/gnn_model112.pth", map_location="cpu")
+    enocode_model = SentenceTransforme(f"model\SentenceTrans_model")
+    return gnn_model, enocode_model
+
+
+def load_data():
+    hetero_data = torch.load("data/hetero_graph3.pt")
+    return hetero_data
 
 
 def get_or_create_user(username, rated_series_id, rating, data, encode_mode):

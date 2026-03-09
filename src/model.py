@@ -3,24 +3,13 @@ import torch
 from pathlib import Path
 from torch_geometric.data import HeteroData
 
-from .preprocess import get_or_create_user
+from src.preprocess import get_or_create_user, load_data, load_models
 import numpy
 from sentence_transformers import SentenceTransforme
 from typing import Dict
 
 # MODEL_PATH = Path("model\gnn_model112.pth")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
-def load_models():
-    gnn_model = torch.load("model/gnn_model112.pth", map_location="cpu")
-    enocode_model = SentenceTransforme(f"model\SentenceTrans_model")
-    return gnn_model, enocode_model
-
-
-def load_data():
-    hetero_data = torch.load("data/hetero_graph3.pt")
-    return hetero_data
 
 
 gnn_model, encode_model = load_models()
