@@ -424,7 +424,7 @@ function confirmRating() {
   }
   document.getElementById("rated-count").textContent = `${Object.keys(ratings).length} series rated`;
   closeModal();
-  showToast(`Rated: ${currentSeries.title}`);
+  showToast(`Rated: ${currentSeries}`);
 }
 
 async function getRecommendations() {
