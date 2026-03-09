@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import json
 from sentence_transformers import SentenceTransformer
+from src.model_arch import Model
 
 path = ""
 
@@ -15,13 +16,6 @@ path = ""
 # {"ratings": {"1396": 8, "66732": 9, "1399": 7}}
 
 
-def load_models():
-    gnn_model = torch.load("model/gnn_model112.pth", map_location="cpu")
-    enocode_model = SentenceTransformer(f"model/SentenceTrans_model")
-
-    return gnn_model, enocode_model
-
-
 def load_data():
     hetero_data = torch.load("data/hetero_graph3.pt")
     series_details_df = pd.read_csv("data/series_details_df1.csv")
@@ -31,6 +25,17 @@ def load_data():
 
 
 hetero_data, series_details_df, df_reviews_rate_exist = load_data()
+
+
+def load_models():
+    gnn_model = Model(hidden_channels=112, data=hetero_data)
+    gnn_model.load_state_dict(torch.load("model/gnn_model112.pth", map_location="cpu"))
+    gnn_model.eval()
+    enocode_model = SentenceTransformer(f"model/SentenceTrans_model")
+
+    return gnn_model, enocode_model
+
+
 gnn_model, encode_model = load_models()
 
 

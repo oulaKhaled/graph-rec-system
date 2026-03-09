@@ -16,8 +16,9 @@ gnn_model, encode_model = load_models()
 
 def get_recommendation(username: str, ratings_dict: Dict[str, int]):
     data, user_index = get_or_create_user(username, ratings_dict)
-    ## save new HeteroGraph
-    gnn_model.eval()
+    print("Data", data)
+    print("user_index", user_index)
+
     with torch.no_grad():
         x_dict = gnn_model.get_embedding(data.to(device))
         user_emb = x_dict["users"][user_index]
