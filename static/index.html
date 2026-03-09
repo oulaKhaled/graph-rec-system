@@ -414,6 +414,7 @@ function updateStars(val) {
 
 function confirmRating() {
   if (!currentSeries || !currentRating) return;
+   const title = currentSeries.title;
   ratings[currentSeries.tmdb_id] = currentRating;
   const card = document.querySelector(`[data-id="${currentSeries.tmdb_id}"]`);
   if (card) {
