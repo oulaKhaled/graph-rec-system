@@ -30,8 +30,7 @@ Key design decisions that go beyond standard tutorials:
 
 ## Dataset
 
-Data was fetched from the **TMDB API** and preprocessed into CSV files before being converted into a heterogeneous graph.
-
+Data was fetched from the **[TMDB API](https://developer.themoviedb.org/reference/getting-started)** and preprocessed into CSV files before being converted into a heterogeneous graph. 
 ### Data Collection & Preprocessing
 
 - Series details (overview, genres, creators, type, popularity) fetched from TMDB API
@@ -58,12 +57,28 @@ Data was fetched from the **TMDB API** and preprocessed into CSV files before be
 
 ---
 
+## Graph Structure
 
-## Hetero Graph Structure visualization
-<img width="500" height="500" alt="graph" src="https://github.com/user-attachments/assets/f1d5c019-397b-4045-963b-382f2d9c0c9b" />
+<img width="600" height="600" alt="graph" src="https://github.com/user-attachments/assets/f1d5c019-397b-4045-963b-382f2d9c0c9b" />
 
-## Random Node and its neighbors visualization
-<img width="1570" height="1560" alt="graph node" src="https://github.com/user-attachments/assets/71a18dfe-d70a-49d3-9e66-e61ea6d6b5e8" />
+The heterogeneous graph models five node types and four edge types. 
+The **series** node acts as the central hub, connecting to users 
+through rating interactions, and to metadata nodes (genres, writers, 
+and types) through structural relationships. This multi-relational 
+structure allows the GNN to capture both collaborative signals 
+(user-series interactions) and content-based signals (series metadata) 
+during message passing.
+
+## Node Neighborhood Example
+
+<img width="800" height="800" alt="graph node" src="https://github.com/user-attachments/assets/71a18dfe-d70a-49d3-9e66-e61ea6d6b5e8" />
+
+Visualization of a single series node (center) and all its 
+connected neighbors across the graph. The dense connections 
+radiating outward illustrate why message passing is powerful — 
+during a single GNN forward pass, this node aggregates information 
+from hundreds of neighboring nodes, building a rich embedding that 
+captures both direct and indirect relationships in the graph.
 
 
 ## Model Architecture
@@ -147,15 +162,28 @@ edge_index       → structural graph (message passing only)
 edge_label_index → supervision edges (prediction targets only)
 ```
 
-### 3. Cold Start Solution
+### 3. User Identity Management
 
-New users who have never been seen by the model are handled by:
+To handle returning users correctly, the system maintains a **user registry** 
+that maps each user to their graph node index. Before processing any request, 
+the system checks whether the user already exists in the graph:
 
-1. Asking user to rate one or more series at onboarding
-2. Using the first rated series overview embedding as initial user review feature
-3. Using global average watch hour as initial behavioral feature
-4. Adding user node and rating edges to the graph
-5. Running a fresh GNN forward pass to generate embeddings
+**Returning user:**
+- Retrieve existing node index from registry
+- Update existing edge ratings if series was already rated
+- Create new edges for newly rated series
+- Run fresh GNN forward pass for updated embeddings
+
+**New user (cold start):**
+- Create new node with onboarding features
+- Add rating edges to graph
+- Register user in registry
+- Run GNN forward pass for initial embeddings
+
+This prevents duplicate nodes from being created for returning users, 
+which would corrupt the graph structure and degrade recommendation quality 
+over time.
+
 
 ---
 
