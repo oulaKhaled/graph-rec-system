@@ -196,24 +196,22 @@ Hyperparameters were tuned using **Optuna** with multi-objective optimization:
 
 ---
 
-## Installation
-
-```bash
-pip install torch==2.4.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-pip install torch-scatter -f https://data.pyg.org/whl/torch-2.4.0+cu118.html
-pip install torch-sparse -f https://data.pyg.org/whl/torch-2.4.0+cu118.html
-pip install torch-cluster -f https://data.pyg.org/whl/torch-2.4.0+cu118.html
-pip install torch-geometric
-pip install sentence-transformers optuna torchmetrics scikit-learn
-```
-
+## Tech Stack
+- PyTorch & PyTorch Geometric — GNN implementation
+- Sentence Transformers — text feature encoding
+- Optuna — hyperparameter tuning
+- TorchMetrics — ranking evaluation metrics
+- Hugging Face Spaces — deployment
 ---
 
 ## References
 
-- Kipf & Welling (2017) — Semi-Supervised Classification with Graph Convolutional Networks
-- Hamilton et al. (2017) — Inductive Representation Learning on Large Graphs (GraphSAGE)
-- Hu et al. (2020) — Open Graph Benchmark
-- Yang et al. (2020) — Understanding Negative Sampling in Graph Representation Learning
-- Geirhos et al. (2020) — Shortcut Learning in Deep Neural Networks
-- RANS (2025) — Risk Aware Negative Sampling in Link Prediction
+### Papers
+- Norton et al. — Heterogeneous Graph Recommendation Model based on Graph Neural Network
+- Wang et al. — Graph Learning based Recommender Systems: A Review
+- Xu et al. (2019) — How Powerful are Graph Neural Networks?
+-  Li et al. (2023) — Evaluating Graph Neural Networks for Link Prediction: Current Pitfalls and New Benchmarking
+
+### Courses & Resources
+- [apxml — Graph Neural Networks Course](https://apxml.com/courses/graph-neural-networks-gnns)
+- PyTorch Geometric Documentation — https://pytorch-geometric.readthedocs.io
