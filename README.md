@@ -91,7 +91,18 @@ Input features → SAGEConv layer 1 → ReLU → SAGEConv layer 2 → Node Embed
 
 - Two `SAGEConv` layers converted to heterogeneous using `to_hetero()`
 - Separate linear projection layers for user and series features
-- Learned embeddings for genres, writers, and types
+- Learned embeddings for genres, writers, and types  
+## Model Visualization
+
+### Series Embeddings (t-SNE)
+<img width="790" height="490" alt="node_embeddings" src="https://github.com/user-attachments/assets/e604d460-2e21-4174-850a-cac4cb359592" />
+
+
+The t-SNE plot shows the GNN's learned embeddings for all series in the graph,
+colored by series type. The clear clustering indicates the model successfully 
+learned to group similar content together — scripted series, documentaries, 
+talk shows, and other types form distinct regions in the embedding space.
+This separation is what enables meaningful recommendations.
 
 ### Link Prediction — Dot Product Classifier
 
@@ -105,6 +116,10 @@ user_embedding · series_embedding → edge score → sigmoid → probability
 - For each positive edge `(user, series)`, a negative series is sampled for the same user
 - Loss: `BCEWithLogitsLoss` on positive and negative scores separately
 - Optimizer: Adam with tuned learning rate and weight decay
+
+
+
+
 
 ### What the Loss Function Learns
 
